@@ -1,28 +1,47 @@
 import { Component } from '@angular/core';
-//import '../../public/css/styles.css';
-import { Hero } from './hero';
+import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+
+import { DashboardComponent } from './dashboard.component';
+import { HeroesComponent } from './heroes.component';
 import { HeroDetailComponent } from './hero-detail.component';
+import { HeroService } from './hero.service';
+import '../../public/css/styles.css';
+
 @Component({
   selector: 'my-app',
-  template: require('./app.component.html'),
+  template: `
+    <h1>{{title}}</h1>
+    <nav>
+      <a [routerLink]="['Dashboard']">Dashboard</a>
+      <a [routerLink]="['Heroes']">Heroes</a>
+    </nav>
+    <router-outlet></router-outlet>
+  `,
   styles: [require('./app.component.css')],
-  directives: [HeroDetailComponent]
+  directives: [ROUTER_DIRECTIVES],
+  providers: [
+    ROUTER_PROVIDERS,
+    HeroService
+  ]
 })
+@RouteConfig([
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardComponent,
+    useAsDefault: true
+  },
+  {
+    path: '/detail/:id',
+    name: 'HeroDetail',
+    component: HeroDetailComponent
+  },
+  {
+    path: '/heroes',
+    name: 'Heroes',
+    component: HeroesComponent
+  }
+])
 export class AppComponent {
   title = 'Tour of Heroes';
-  heroes = HEROES;
-  selectedHero: Hero;
-  onSelect(hero: Hero) { this.selectedHero = hero; }
 }
-var HEROES: Hero[] = [
-  { "id": 11, "name": "Mr. Nice" },
-  { "id": 12, "name": "Narco" },
-  { "id": 13, "name": "Bombasto" },
-  { "id": 14, "name": "Celeritas" },
-  { "id": 15, "name": "Magneta" },
-  { "id": 16, "name": "RubberMan" },
-  { "id": 17, "name": "Dynama" },
-  { "id": 18, "name": "Dr IQ" },
-  { "id": 19, "name": "Magma" },
-  { "id": 20, "name": "Tornado" }
-];
